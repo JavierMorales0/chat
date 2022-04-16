@@ -9,6 +9,13 @@ import { Server } from "socket.io";
 // Importing the socket.io configuration
 import SocketIO from "./socket.js";
 
+// Setting the URL and dirname of the application
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 // Creating the express application
 const app = express();
 // Creating the http server using the express application
@@ -29,6 +36,11 @@ app.set("port", process.env.PORT || 3000);
 // Setting the configuration for the application
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Setting the static files path
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 // Initializing the server
 server.listen(app.get("port"), () => {
