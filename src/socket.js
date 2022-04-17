@@ -1,6 +1,9 @@
 /*
  *  socket.js - Socket.io configuration
  */
+
+const BOT_NAME = "bot";
+
 export default (io) => {
   // Setting the namespace "chat"
   io.of("/chat").on("connection", (socket) => {
@@ -13,6 +16,11 @@ export default (io) => {
     // Set the nickname
     socket.nickname = socket.handshake.query.nickname;
     console.log(`${socket.nickname} connected`);
+    // Send the message to the rest of the users
+    socket.broadcast.emit("chat:actions", {
+      by: BOT_NAME,
+      message: `${socket.nickname} joined the chat`,
+    });
 
     /*
      *  Configurating the events
@@ -31,30 +39,24 @@ export default (io) => {
     socket.on("chat:typing", () => {
       // Send the message to all the users
       socket.broadcast.emit("chat:typing", {
-        nickname: socket.nickname,
+        message: `${socket.nickname} is typing...`,
       });
     });
     // When user is not typing
     socket.on("chat:nottyping", () => {
       // Send the message to all the users
       socket.broadcast.emit("chat:nottyping", {
-        nickname: socket.nickname,
+        message: "",
       });
     });
 
     // When the user disconnect
     socket.on("disconnect", () => {
-      console.log(`${socket.nickname} disconnected`);
-    });
-  });
-
-  // Setting the namespace "orders"
-  io.of("/orders").on("connection", (socket) => {
-    console.log("A user connected with id " + socket.id);
-
-    // Setting the disconnection event
-    socket.on("disconnect", () => {
-      console.log("A user disconnected");
+      // Send the message to the rest of the users
+      socket.broadcast.emit("chat:actions", {
+        by: BOT_NAME,
+        message: `${socket.nickname} left the chat`,
+      });
     });
   });
 };
