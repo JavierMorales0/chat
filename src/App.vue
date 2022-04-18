@@ -1,44 +1,8 @@
 <template>
-  <header class="py-1 py-md-3 px-1 px-md-3 text-center">
-    <p class="_title">Chat</p>
-  </header>
-  <main class="d-flex justify-around align-items-center">
-    <div class="px-3 py-2 w-25 _border-radius" v-show="!isConnected">
-      <el-input
-        v-model="nickname"
-        placeholder="Ingrese su nombre de usuario"
-        class="my-2 w-100"
-      /><el-button
-        class="d-block mx-auto my-2"
-        v-on:click.prevent="connect(nickname)"
-        >Ir al chat</el-button
-      >
-    </div>
-    <div v-show="!isConnected">c</div>
-    <div v-show="isConnected" class="_bg-primary w-100 p-0">
-      <div class="px-2 px-md-4 my-0">
-        <p class="text-center py-2">
-          Conectado como <span class="bold">{{ nickname }}</span>
-        </p>
-      </div>
-      <section class="bg-white px-1 px-md-3">
-        <div
-          class="_border-radius"
-          v-for="(item, index) in messages"
-          :key="index"
-        >
-          <p class="d-block w-100 my-0">
-            <span class="bold"> {{ item.nickname }}</span
-            >: <span>{{ item.message }}</span>
-          </p>
-        </div>
-      </section>
-    </div>
-  </main>
+  
+  <router-view></router-view>
 </template>
 <script>
-import io from "socket.io-client";
-import { ElMessage } from "element-plus";
 export default {
   data() {
     return {
@@ -48,81 +12,66 @@ export default {
       messages: [],
     };
   },
-  mounted() {
-    // Traer del localstorage el nickname
-    this.nickname = localStorage.getItem("nickname");
-    if (!this.nickname) {
-      ElMessage.error("No hay sesión iniciada");
-    } else {
-      this.connect(this.nickname);
-    }
-  },
-  methods: {
-    connect(nickname) {
-      if (nickname == "" || nickname.length < 3) {
-        ElMessage.warning(
-          "El nombre de usuario debe tener al menos 3 caracteres"
-        );
-        return;
-      }
-      this.socket = io(
-        "https://jalex-chat.herokuapp.com/chat?nickname=" + nickname
-      );
-      this.isConnected = true;
-      // Setear el nickname en el localstorage
-      localStorage.setItem("nickname", nickname);
-      this.socket.on("connect", () => {
-        console.log("Connected");
-      });
-      this.socket.on("message", (data) => {
-        this.messages.push(data);
-      });
-      this.socket.on("disconnect", () => {
-        console.log("Disconnected");
-      });
-    },
-    disconnect() {
-      this.socket.disconnect();
-      this.isConnected = false;
-      localStorage.removeItem("nickname");
-    },
-  },
+  mounted() {},
+  methods: {},
 };
 </script>
 <style lang="scss">
 * {
-  font-family: "PT Sans", sans-serif;
+  font-family: "Nunito", sans-serif;
 }
 html,
 body,
-#app {
-  height: 100%;
-}
-
 :root {
-  --primary: #61c57a;
+  --green: #53dd6c;
+  --yellow: #ff9f1c;
+  --white: #fafafa;
+  --gray: #37392e;
+  --blue: #5d5f71;
 }
-._title {
-  font-size: 1.3rem;
+
+#app {
+  min-height: 100vh;
+  width: 100%;
+
+  color: black;
+}
+
+._btn {
+  background-color: var(--green);
+  color: black;
+  padding: 1rem 3rem;
+  border-radius: 5px;
   font-weight: bold;
-  letter-spacing: 1px;
-  text-shadow: 0px 0px 10px var(--primary);
-  text-transform: lowercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
 }
-
-.h-100 {
-  height: 100% !important;
+._btn:hover {
+  cursor: pointer;
+  background: var(--gray);
+  color: var(--green);
 }
-
-._bg-primary {
-  background-color: var(--primary) !important;
+._h-100 {
+  height: 100vh !important;
 }
 
 .bold {
   font-weight: bold;
 }
 
-._border-radius {
-  border-radius: 10px;
+._title {
+  font-size: 4rem;
+  letter-spacing: 1px;
+  color: var(--green);
+}
+
+._subtitle {
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+._bg-white {
+  background: var(--white) !important;
 }
 </style>
