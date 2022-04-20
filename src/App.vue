@@ -1,117 +1,87 @@
 <template>
-  <header class="py-1 py-md-3 px-1 px-md-3 text-center">
-    <p class="_title">Chat</p>
-  </header>
-  <main class="d-flex justify-around align-items-center">
-    <div class="px-3 py-2 w-25 _border-radius" v-show="!isConnected">
-      <el-input
-        v-model="nickname"
-        placeholder="Ingrese su nombre de usuario"
-        class="my-2 w-100"
-      /><el-button
-        class="d-block mx-auto my-2"
-        v-on:click.prevent="connect(nickname)"
-        >Ir al chat</el-button
+  <el-main>
+    <div class="row">
+      <div
+        class="col-12 col-md-5 d-flex justify-content-around align-items-center"
       >
-    </div>
-    <div v-show="!isConnected">c</div>
-    <div v-show="isConnected" class="_bg-primary w-100 p-0">
-      <div class="px-2 px-md-4 my-0">
-        <p class="text-center py-2">
-          Conectado como <span class="bold">{{ nickname }}</span>
-        </p>
+        <el-avatar :size="32" :src="circleUrl" />
+        <p class="bold">{{ username }} online</p>
       </div>
-      <section class="bg-white px-1 px-md-3">
-        <div
-          class="_border-radius"
-          v-for="(item, index) in messages"
-          :key="index"
-        >
-          <p class="d-block w-100 my-0">
-            <span class="bold"> {{ item.nickname }}</span
-            >: <span>{{ item.message }}</span>
-          </p>
-        </div>
-      </section>
+      <div class="col-12 col-md-7"></div>
     </div>
-  </main>
+  </el-main>
 </template>
 <script>
-import io from "socket.io-client";
-import { ElMessage } from "element-plus";
+import bg from "@/assets/bg.svg";
 export default {
   data() {
     return {
       socket: null,
       isConnected: false,
-      nickname: null,
+      nickname: "",
       messages: [],
+      bg: bg,
     };
   },
-  mounted() {
-    // Traer del localstorage el nickname
-    this.nickname = localStorage.getItem("nickname");
-    if (!this.nickname) {
-      ElMessage.error("No hay sesión iniciada");
-    } else {
-      this.connect(this.nickname);
-    }
-  },
-  methods: {
-    connect(nickname) {
-      if (nickname == "" || nickname.length < 3) {
-        ElMessage.warning(
-          "El nombre de usuario debe tener al menos 3 caracteres"
-        );
-        return;
-      }
-      this.socket = io(
-        "https://jalex-chat.herokuapp.com/chat?nickname=" + nickname
-      );
-      this.isConnected = true;
-      // Setear el nickname en el localstorage
-      localStorage.setItem("nickname", nickname);
-      this.socket.on("connect", () => {
-        console.log("Connected");
-      });
-      this.socket.on("message", (data) => {
-        this.messages.push(data);
-      });
-      this.socket.on("disconnect", () => {
-        console.log("Disconnected");
-      });
-    },
-    disconnect() {
-      this.socket.disconnect();
-      this.isConnected = false;
-      localStorage.removeItem("nickname");
-    },
-  },
+  mounted() {},
+  methods: {},
 };
 </script>
 <style lang="scss">
-
-._title {
-  font-size: 1.3rem;
-  font-weight: bold;
-  letter-spacing: 1px;
-  text-shadow: 0px 0px 10px var(--primary);
-  text-transform: lowercase;
+._bg {
+  min-height: 100vh;
+  width: 100%;
+  color: white;
 }
 
-.h-100 {
-  height: 100% !important;
+._input {
+  background-color: transparent;
+  margin: 0 1rem;
+  border-bottom: 1px solid var(--blue);
+  border-radius: 0;
+  transition: all 0.3s ease-in-out;
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid var(--green);
+  }
 }
 
-._bg-primary {
-  background-color: var(--primary) !important;
+._no-events {
+  pointer-events: none;
+  // No permitir la selesccion de texto
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
-.bold {
-  font-weight: bold;
-}
-
-._border-radius {
+._chat {
+  height: 70vh;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+}
+._messages {
+  width: 100%;
+  padding: 10px 20px;
+  flex: 1;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  overflow-y: auto;
+}
+@media (min-width: 768px) {
+  ._chat {
+    width: 40%;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+  }
 }
 </style>
