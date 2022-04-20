@@ -1,0 +1,14 @@
+* {
+  font-family: "PT Sans", sans-serif;
+}
+html,
+body,
+#app {
+  height: 100%;
+}
+
+:root {
+  --primary: #61c57a;
+  --bg-primary: #111b21;
+  --bg-secondary: #202c33;
+}

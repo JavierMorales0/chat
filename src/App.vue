@@ -90,18 +90,7 @@ export default {
 };
 </script>
 <style lang="scss">
-* {
-  font-family: "PT Sans", sans-serif;
-}
-html,
-body,
-#app {
-  height: 100%;
-}
 
-:root {
-  --primary: #61c57a;
-}
 ._title {
   font-size: 1.3rem;
   font-weight: bold;
