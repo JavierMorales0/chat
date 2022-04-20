@@ -1,72 +1,73 @@
 <template>
-  <div class="h-100 w-100 px-1 px-md-4 py-2">
-    <div
-      class="d-flex align-items-center justify-content-around _w-25"
-      v-if="!isConnected"
-    >
-      <el-input v-model="nickname" placeholder="Ingrese su alias" />
-      <el-button class="mx-2" v-on:click.prevent="connect(nickname)"
-        >Conectarse</el-button
+  <el-main class="p-0 m-0">
+    <div class="row _bg-secondary w-100 px-1 py-3">
+      <div
+        class="col-12 col-md-5 d-flex justify-content-around align-items-center _border-right"
       >
+        <el-avatar :size="32" :src="circleUrl" />
+        <span class="_semibold text-muted">{{ nickname || "nobody" }}</span>
+      </div>
+      <div
+        class="col-12 col-md-7 text-center d-flex justify-content-center align-items-center"
+      >
+        <span>Chat with {{ nickname || "nobody" }}.</span>
+      </div>
     </div>
-  </div>
-  <el-main class="w-100 h-100" v-loading="loading"> Chat </el-main>
+    <div class="row w-100">
+      <div class="col-12 px-3 py-2">Hola</div>
+    </div>
+  </el-main>
 </template>
 <script>
 import io from "socket.io-client";
-import { ElMessage } from "element-plus";
 export default {
-  components: {},
   data() {
     return {
-      nickname: "",
+      socket: null,
       isConnected: false,
-      loading: false,
+      nickname: "",
+      messages: [],
     };
+  },
+  props: {
+    username: {
+      type: String,
+      default: "",
+    },
+  },
+  mounted() {
+    // Get the params from url
+    const { username } = this.$route.params;
+    // Verify if username is valid
+    if (username) {
+      // Set the username
+      this.nickname = username;
+      // Connect to the server
+      this.connect(this.nickname);
+    } else {
+      // Redirect to home
+      this.$router.push({ name: "Home" });
+    }
   },
   methods: {
     connect(nickname) {
-      this.loading = true;
-      if (nickname == "" || nickname.length < 3) {
-        ElMessage.warning(
-          "El nombre de usuario debe tener al menos 3 caracteres"
-        );
-        this.loading = false;
-        return;
-      }
-      try {
-        this.socket = io(
-          "https://jalex-chat.herokuapp.com/chat?nickname=" + nickname
-        );
+      this.socket = io(
+        "https://jalex-chat.herokuapp.com/chat?nickname=" + nickname
+      );
+      this.socket.on("connect", () => {
         this.isConnected = true;
-        this.socket.on("connect", () => {
-          console.log("Connected");
-        });
-        this.socket.on("message", (data) => {
-          this.messages.push(data);
-        });
-        this.socket.on("disconnect", () => {
-          console.log("Disconnected");
-        });
-      } catch (e) {
-        ElMessage.error(e);
-      }
-      this.loading = false;
-    },
-    disconnect() {
-      this.socket.disconnect();
-      this.isConnected = false;
+      });
     },
   },
 };
 </script>
 <style lang="scss">
-._w-25 {
+._bg {
+  min-height: 100vh;
   width: 100%;
+  color: white;
 }
+
 @media (min-width: 768px) {
-  ._w-25 {
-    width: 25%;
-  }
 }
 </style>

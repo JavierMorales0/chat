@@ -15,6 +15,16 @@ body,
   --bg-secondary: #202c33;
 }
 
+._input {
+  background-color: var(--bg-secondary) !important;
+  padding: 10px 15px;
+  border: none;
+  outline: none;
+  width: 70%;
+  text-align: center;
+  border-radius: 0.5rem;
+}
+
 ._text-white {
   color: white !important;
 }
@@ -23,11 +33,41 @@ body,
 }
 
 ._btn {
-  background: var(--blue) !important;
+  color: var(--bg-primary);
+}
+._btn:hover {
+  letter-spacing: 1px;
+  color: var(--bg-primary);
 }
 ._bold {
-  font-weight: bold;
+  font-weight: 800;
 }
 ._semibold {
-  font-weight: 500;
+  font-weight: 600;
+}
+
+._bg-secondary {
+  background-color: var(--bg-secondary) !important;
+}
+._bg-primary {
+  background-color: var(--bg-primary) !important;
+}
+
+._border-right {
+  border-right: 1px solid white !important;
+}
+._border-left {
+  border-left: 1px solid white !important;
+}
+._border-top {
+  border-top: 1px solid white !important;
+}
+._border-bottom {
+  border-bottom: 1px solid white !important;
+}
+
+@media (min-width: 768px) {
+  ._input {
+    width: 40% !important;
+  }
 }
