@@ -1,5 +1,5 @@
 <template>
-  <el-main class="p-0 m-0">
+  <el-main class="p-0 m-0 _h-100">
     <div class="row _bg-secondary w-100 px-1 py-3">
       <div
         class="col-12 col-md-5 d-flex justify-content-around align-items-center _border-right"
@@ -10,11 +10,29 @@
       <div
         class="col-12 col-md-7 text-center d-flex justify-content-center align-items-center"
       >
-        <span>Chat with {{ nickname || "nobody" }}.</span>
+        <span> {{ notification }}</span>
       </div>
     </div>
     <div class="row w-100">
-      <div class="col-12 px-3 py-2">Hola</div>
+      <div class="col-12 px-3 py-2">{{ messages }}</div>
+    </div>
+    <div
+      class="fixed-bottom my-1 my-md-3 w-100 d-flex justify-content-center align-items-center"
+    >
+      <input
+        type="text"
+        name=""
+        id=""
+        class="_input _input-text-left mx-2"
+        v-model="message"
+        v-on:keyup="typing()"
+      />
+      <el-button
+        class="_btn mx-2"
+        type="primary"
+        v-on:click.prevent="sendMessage(message)"
+        >Enviar</el-button
+      >
     </div>
   </el-main>
 </template>
@@ -27,6 +45,8 @@ export default {
       isConnected: false,
       nickname: "",
       messages: [],
+      message: "",
+      notification: "",
     };
   },
   props: {
@@ -57,6 +77,28 @@ export default {
       this.socket.on("connect", () => {
         this.isConnected = true;
       });
+      this.socket.on("message", (message) => {
+        this.messages.push(message);
+      });
+      this.socket.on("chat:actions", (message) => this.messages.push(message));
+      this.socket.on(
+        "chat:typing",
+        (message) => (this.notification = message.message)
+      );
+      this.socket.on("chat:nottyping", () => (this.notification = ""));
+    },
+    sendMessage(message) {
+      if (message) {
+        this.socket.emit("chat:message", message);
+        this.message = "";
+      }
+    },
+    typing() {
+      // Create a timeout to send the typing message
+      this.socket.emit("chat:typing");
+      setTimeout(() => {
+        this.socket.emit("chat:nottyping");
+      }, 2000);
     },
   },
 };
@@ -66,6 +108,10 @@ export default {
   min-height: 100vh;
   width: 100%;
   color: white;
+}
+
+._h-100 {
+  height: 100vh;
 }
 
 @media (min-width: 768px) {

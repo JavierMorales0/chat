@@ -25,6 +25,10 @@ body,
   border-radius: 0.5rem;
 }
 
+._input-text-left {
+  text-align: left;
+}
+
 ._text-white {
   color: white !important;
 }
