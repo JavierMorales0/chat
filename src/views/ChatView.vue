@@ -10,7 +10,10 @@
       <div
         class="col-12 col-md-7 text-center d-flex justify-content-center align-items-center"
       >
-        <span>Chat with {{ nickname || "nobody" }}.</span>
+        <span
+          >Chating as <span class="_bold text-uppercase">{{ nickname || "nobody" }}</span
+          >.</span
+        >
       </div>
     </div>
     <div class="row w-100">
