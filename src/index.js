@@ -1,48 +1,36 @@
-/*
- *   index.js - Main file where the application is started
- */
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Expenses from './routes/expenses';
+import Invoices from './routes/invoices';
+import Invoice from './routes/invoice';
 
-import express from "express";
-import { createServer } from "http";
-import { Server } from "socket.io";
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />}>
+        <Route path="expenses" element={<Expenses />}></Route>
+        <Route path="invoices" element={<Invoices />}>
+          <Route path=":invoiceId" element={<Invoice />} />
+        </Route>
+        <Route
+          path="*"
+          element={
+            <main style={{ padding: '1rem' }}>
+              <p>There is nothing here!</p>
+            </main>
+          }
+        />
+      </Route>
+    </Routes>
+  </BrowserRouter>
+);
 
-// Importing the socket.io configuration
-import SocketIO from "./socket.js";
-
-// Setting the URL and dirname of the application
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Creating the express application
-const app = express();
-// Creating the http server using the express application
-const server = createServer(app);
-// Creating the socket.io server using the http server
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
-// Calling the socket.io configuration
-SocketIO(io);
-
-// Setting the port to listen on
-app.set("port", process.env.PORT || 3000);
-
-// Setting the configuration for the application
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Setting the static files path
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
-
-// Initializing the server
-server.listen(app.get("port"), () => {
-  console.log(`Server is running on port ${app.get("port")}`);
-});
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
