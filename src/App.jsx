@@ -1,20 +1,17 @@
 // import logo from './logo.svg';
-import './App.css';
-import { Outlet, Link } from 'react-router-dom';
+//import Login from './components/login.component';
 
+//import { Button } from 'primereact/button';
 function App() {
   return (
     <div>
-      <h1>Bootkeeper!</h1>
-      <nav
-        style={{
-          borderBottom: 'solid 1px',
-          paddingBottom: '1rem',
-        }}>
-        <Link to="/invoices">Invoices</Link> |{' '}
-        <Link to="/expenses">Expenses</Link>
-      </nav>
-      <Outlet />
+      <div className="w-100 h-screen d-flex justify-content-around align-items-center">
+        <p className="">Hello World, let`s chat!</p>
+        <p>Image</p>
+      </div>
+      <div className="w-100 h-screen d-flex justify-content-around align-items-center">
+        <p>Hello World, let`s chat!</p>
+      </div>
     </div>
   );
 }
