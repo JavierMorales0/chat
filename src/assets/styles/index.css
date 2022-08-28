@@ -1,0 +1,97 @@
+@import url('./animations.css');
+:root {
+  --primary: #6366f1;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+._bg-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+._font-bold {
+  font-weight: bold;
+}
+
+._font-bolder {
+  font-weight: bolder;
+}
+
+._font-light {
+  font-weight: light;
+}
+
+._text-small {
+  font-size: 0.9rem;
+}
+._text-medium {
+  font-size: 1.1rem;
+}
+._text-large {
+  font-size: 1.3rem;
+}
+._text-xlarge {
+  font-size: 2rem;
+}
+
+._text-xxlarge {
+  font-size: 4rem;
+}
+
+._ls-smallest {
+  letter-spacing: -1px;
+}
+
+._ls-small {
+  letter-spacing: 1px;
+}
+
+._ls-medium {
+  letter-spacing: 3px;
+}
+
+._ls-large {
+  letter-spacing: 5px;
+}
+
+._uppercase {
+  text-transform: uppercase;
+}
+
+.__lowercase {
+  text-transform: lowercase;
+}
+
+._capitalize {
+  text-transform: capitalize;
+}
+
+._minh-25 {
+  min-height: 25%;
+}
+
+._minh-50 {
+  min-height: 50%;
+}
+
+._minh-75 {
+  min-height: 75%;
+}
