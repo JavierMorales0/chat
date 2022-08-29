@@ -18,6 +18,10 @@ code {
     monospace;
 }
 
+._link {
+  text-decoration: none;
+}
+
 .h-screen {
   height: 100vh;
 }
@@ -94,4 +98,14 @@ code {
 
 ._minh-75 {
   min-height: 75%;
+}
+
+._w-25 {
+  width: 100%;
+}
+
+@media only screen and (min-width: 481px) {
+  ._w-25 {
+    width: 25%;
+  }
 }

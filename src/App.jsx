@@ -1,33 +1,50 @@
 // import logo from './logo.svg';
 //import Login from './components/login.component';
 import IndexImage from './assets/illustrations/undraw_quick_chat_re_bit5.svg';
-//import { Button } from 'primereact/button';
+import IndexImage2 from './assets/illustrations/undraw_personal_opinions_re_qw29.svg';
+import { Button } from 'primereact/button';
+import { Link } from 'react-router-dom';
 function App() {
   animation();
   return (
     <div>
       <div
         className="w-100 h-screen d-flex flex-column flex-md-row 
-          justify-content-around justify-content-md-around align-items-center">
+          justify-content-around align-items-center px-2 px-md-0">
         <article className="w-50 mb-5 mb-md-0 _minh-25">
           <h1>
             <a
               href=""
               className="typewrite _text-xlarge _ls-smallest"
               data-period="1500"
-              data-type='[ "Hello everyone!", "Do you want to see something amazing?", "Let`s CHAT!" ]'>
+              data-type='[ "Hello everyone!", "Do you want to see 
+                something amazing?", "Let&apos;s CHAT!" ]'>
               <span className="wrap"></span>
             </a>
           </h1>
         </article>
         <img
-          className="w-25"
+          className="_w-25"
           src={IndexImage}
           alt="Illustration of a bird chatting"
         />
       </div>
-      <div className="w-100 h-screen d-flex justify-content-around align-items-center _bg-primary">
-        <p>Hello World, let`s chat!</p>
+      <div
+        className="w-100 h-screen d-flex flex-column flex-md-row 
+        justify-content-around align-items-center _bg-primary px-2 px-md-0">
+        <img
+          src={IndexImage2}
+          className="_w-25"
+          alt="Illustration of a person holding a text message"
+        />
+        <div className="d-flex flex-column justify-content-center align-items-center">
+          <p className=" _text-medium _font-light">
+            Don&apos;t worry how it costs... I&apos;m free
+          </p>
+          <Link to="/chat" className="_link">
+            <Button label="Chat now!" icon="pi pi-comment" />
+          </Link>
+        </div>
       </div>
     </div>
   );
