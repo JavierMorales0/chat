@@ -11,6 +11,9 @@ import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+/* Getting the current year. */
+const date = new Date();
+const year = date.getFullYear();
 root.render(
   <BrowserRouter>
     <Routes>
@@ -25,6 +28,9 @@ root.render(
         }
       />
     </Routes>
+    <footer className="text-center _text-small py-2 ">
+      <span>Javier Morales Melara | Copyright @ {year}</span>
+    </footer>
   </BrowserRouter>
 );
 

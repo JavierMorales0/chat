@@ -11,17 +11,20 @@ function App() {
       <div
         className="w-100 h-screen d-flex flex-column flex-md-row 
           justify-content-around align-items-center px-2 px-md-0">
-        <article className="w-50 mb-5 mb-md-0 _minh-25">
-          <h1>
+        <article className="px-2 _w-50 mb-5 mb-md-0 _minh-25  d-flex flex-column justify-content-between align-items-center">
+          <h1 className="">
             <a
               href=""
-              className="typewrite _text-xlarge _ls-smallest"
+              className="typewrite _text-xlarge _ls-smallest _h-100"
               data-period="1500"
               data-type='[ "Hello everyone!", "Do you want to see 
                 something amazing?", "Let&apos;s CHAT!" ]'>
               <span className="wrap"></span>
             </a>
           </h1>
+          <Link to="/chat" className="_link">
+            <Button label="Chat now!" icon="pi pi-comment" />
+          </Link>
         </article>
         <img
           className="_w-25"
@@ -37,13 +40,23 @@ function App() {
           className="_w-25"
           alt="Illustration of a person holding a text message"
         />
-        <div className="d-flex flex-column justify-content-center align-items-center">
-          <p className=" _text-medium _font-light">
+        <div className="d-flex flex-column justify-content-center align-items-start _w-50">
+          <p className=" _text-medium _font-bold _uppercase">
             Don&apos;t worry how it costs... I&apos;m free
           </p>
-          <Link to="/chat" className="_link">
-            <Button label="Chat now!" icon="pi pi-comment" />
-          </Link>
+          <p className="_text-small _justify _text-secondary mb-1">
+            We are a non paid company wishing to create a platform to show our
+            capatibilities to design and code a really helpful chat. We hope
+            that your stay is pleasant and that you enjoy all our work and
+            dedication. With love...
+          </p>
+          <a
+            href="https://www.linkedin.com/in/javier-morales-melara"
+            target={'_blank'}
+            className="_link _reference bg-white _br-1 px-3 py-1"
+            rel="noreferrer">
+            Javier Morales
+          </a>
         </div>
       </div>
     </div>
