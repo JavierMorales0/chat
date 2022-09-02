@@ -4,8 +4,12 @@ import IndexImage from './assets/illustrations/undraw_quick_chat_re_bit5.svg';
 import IndexImage2 from './assets/illustrations/undraw_personal_opinions_re_qw29.svg';
 import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import animation from './assets/animations/writter.animation';
 function App() {
-  animation();
+  useEffect(() => {
+    animation();
+  });
   return (
     <div>
       <div
@@ -45,9 +49,9 @@ function App() {
             Don&apos;t worry how it costs... I&apos;m free
           </p>
           <p className="_text-small _justify _text-secondary mb-1">
-            We are a non paid company wishing to create a platform to show our
-            capatibilities to design and code a really helpful chat. We hope
-            that your stay is pleasant and that you enjoy all our work and
+            This is a non paid project wishing to create a platform to show my
+            capatibilities to design and code a really helpful chat. I really
+            hope that your stay is pleasant and that you enjoy all my work and
             dedication. With love...
           </p>
           <a
@@ -62,67 +66,4 @@ function App() {
     </div>
   );
 }
-
-function animation() {
-  var TxtType = function (el, toRotate, period) {
-    this.toRotate = toRotate;
-    this.el = el;
-    this.loopNum = 0;
-    this.period = parseInt(period, 10) || 2000;
-    this.txt = '';
-    this.tick();
-    this.isDeleting = false;
-  };
-
-  TxtType.prototype.tick = function () {
-    var i = this.loopNum % this.toRotate.length;
-    var fullTxt = this.toRotate[i];
-
-    if (this.isDeleting) {
-      this.txt = fullTxt.substring(0, this.txt.length - 1);
-    } else {
-      this.txt = fullTxt.substring(0, this.txt.length + 1);
-    }
-
-    this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
-
-    var that = this;
-    var delta = 120 - Math.random() * 100;
-
-    if (this.isDeleting) {
-      delta /= 2;
-    }
-
-    if (!this.isDeleting && this.txt === fullTxt) {
-      delta = this.period;
-      this.isDeleting = true;
-    } else if (this.isDeleting && this.txt === '') {
-      this.isDeleting = false;
-      this.loopNum++;
-      delta = 500;
-    }
-
-    setTimeout(function () {
-      that.tick();
-    }, delta);
-  };
-
-  window.onload = function () {
-    var elements = document.getElementsByClassName('typewrite');
-    for (var i = 0; i < elements.length; i++) {
-      var toRotate = elements[i].getAttribute('data-type');
-      var period = elements[i].getAttribute('data-period');
-      if (toRotate) {
-        new TxtType(elements[i], JSON.parse(toRotate), period);
-      }
-    }
-    // INJECT CSS
-    var css = document.createElement('style');
-    css.type = 'text/css';
-    css.innerHTML =
-      '.typewrite > .wrap { border-right: 0.05em solid var(--primary)}';
-    document.body.appendChild(css);
-  };
-}
-
 export default App;

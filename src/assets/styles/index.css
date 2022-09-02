@@ -127,6 +127,18 @@ code {
   text-transform: capitalize;
 }
 
+._minw-25 {
+  min-width: 25%;
+}
+
+._minw-50 {
+  min-width: 50%;
+}
+
+._minw-75 {
+  min-width: 75%;
+}
+
 ._minh-25 {
   min-height: 25%;
 }
@@ -153,6 +165,10 @@ code {
 
 ._justify {
   text-align: justify;
+}
+
+._text-primary {
+  color: var(--primary);
 }
 
 ._text-secondary {
