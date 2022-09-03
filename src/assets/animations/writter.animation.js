@@ -17,7 +17,6 @@ function animation() {
     } else {
       this.txt = fullTxt.substring(0, this.txt.length + 1);
     }
-
     this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
 
     var that = this;

@@ -6,15 +6,15 @@ export default function Chat() {
   useEffect(() => {
     /* Checking if the user is logged in. If not, it will redirect to the login
     page. */
-    if (!localStorage.getItem('username')) {
+    if (!localStorage.getItem('mome:username')) {
       navigate('/login');
     }
-    setUsername(localStorage.getItem('username'));
+    setUsername(localStorage.getItem('mome:username'));
   });
 
   return (
     <main>
-      <h2>Sesion iniciada como {username}</h2>
+      <p className="_text-small">Sesion iniciada como {username}</p>
     </main>
   );
 }
