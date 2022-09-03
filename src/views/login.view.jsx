@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { cleanCussWords } from '../assets/language/filter';
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import Typewriter from 'typewriter-effect';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,10 +41,22 @@ export default function Login() {
             className="mt-2 w-100 py-1"
             onClick={onLogin}
           />
-          <p className="mt-2 w-100 _text-small _ls-smallest _text-primary text-center">
-            <span className="d-block">
-              Don&apos;t use cuss words and be respectul!
-            </span>
+          <p className="_text-small _ls-smallest _text-primary">
+            <Typewriter
+              options={{
+                strings: [
+                  "Don't use cuss words",
+                  'Be careful with your personal information',
+                  'Spam is not allowed',
+                  'Be respectful to others',
+                ],
+                autoStart: true,
+                loop: true,
+                cursor: '|',
+                delay: 40,
+                deleteSpeed: 10,
+              }}
+            />
           </p>
         </form>
       </div>

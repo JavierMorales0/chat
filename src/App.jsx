@@ -4,28 +4,30 @@ import IndexImage from './assets/illustrations/undraw_quick_chat_re_bit5.svg';
 import IndexImage2 from './assets/illustrations/undraw_personal_opinions_re_qw29.svg';
 import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import animation from './assets/animations/writter.animation';
+import Typewriter from 'typewriter-effect';
 function App() {
-  useEffect(() => {
-    animation();
-  });
   return (
     <div>
       <div
         className="w-100 h-screen d-flex flex-column flex-md-row 
           justify-content-around align-items-center px-2 px-md-0">
         <article className="px-2 _w-50 mb-5 mb-md-0 _minh-25  d-flex flex-column justify-content-between align-items-center">
-          <h1 className="">
-            <a
-              href=""
-              className="typewrite _text-xlarge _ls-smallest _h-100"
-              data-period="1500"
-              data-type='[ "Hello everyone!", "Do you want to see 
-                something amazing?", "Let&apos;s CHAT!" ]'>
-              <span className="wrap"></span>
-            </a>
-          </h1>
+          <p className="_text-xlarge _ls-smallest _h-100 _text-primary">
+            <Typewriter
+              options={{
+                strings: [
+                  'Hello everyone!',
+                  'Do you want to see something amazing?',
+                  "Let's CHAT!",
+                ],
+                autoStart: true,
+                loop: true,
+                cursor: '|',
+                delay: 70,
+                deleteSpeed: 30,
+              }}
+            />
+          </p>
           <Link to="/chat" className="_link">
             <Button label="Chat now!" icon="pi pi-comment" />
           </Link>
