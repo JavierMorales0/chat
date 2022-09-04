@@ -12,7 +12,7 @@ function App() {
         className="w-100 h-screen d-flex flex-column flex-md-row 
           justify-content-around align-items-center px-2 px-md-0">
         <article className="px-2 _w-50 mb-5 mb-md-0 _minh-25  d-flex flex-column justify-content-between align-items-center">
-          <p className="_text-xlarge _ls-smallest _h-100 _text-primary">
+          <div className="_text-xlarge _ls-smallest _h-100 _text-primary">
             <Typewriter
               options={{
                 strings: [
@@ -27,7 +27,7 @@ function App() {
                 deleteSpeed: 30,
               }}
             />
-          </p>
+          </div>
           <Link to="/chat" className="_link">
             <Button label="Chat now!" icon="pi pi-comment" />
           </Link>

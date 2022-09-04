@@ -12,6 +12,7 @@ export default function Login() {
     if (localStorage.getItem('mome:username')) {
       localStorage.removeItem('mome:username');
     }
+    console.log('Etnro a use effec');
     return;
   });
   const [username, setUsername] = useState('');
@@ -20,7 +21,7 @@ export default function Login() {
       <Toaster />
       <div className="w-100 h-screen d-flex flex-column justify-content-center align-items-center">
         <p className="_font-bold _text-normal my-0">
-          I saw you aren&apos;t logged in{' '}
+          I saw you aren&apos;t logged in
           <span className="m-0 _text-primary _uppercase">yet</span>
         </p>
         <p className="_text-small my-0 text-muted">
@@ -28,7 +29,7 @@ export default function Login() {
         </p>
         <form
           onSubmit={onLogin}
-          className="d-flex flex-column justify-content-center _minw-25">
+          className="d-flex flex-column justify-content-center _w-2550">
           <InputText
             type="text"
             className="p-inputtext-sm block mt-3 w-100  text-center py-1"
@@ -41,7 +42,7 @@ export default function Login() {
             className="mt-2 w-100 py-1"
             onClick={onLogin}
           />
-          <p className="_text-small _ls-smallest _text-primary">
+          <div className="_text-small _font-bold _ls-smallest mt-2 w-100 _h-50px">
             <Typewriter
               options={{
                 strings: [
@@ -57,7 +58,7 @@ export default function Login() {
                 deleteSpeed: 10,
               }}
             />
-          </p>
+          </div>
         </form>
       </div>
     </main>
