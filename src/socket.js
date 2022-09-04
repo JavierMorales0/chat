@@ -29,7 +29,7 @@ export default (io) => {
     // When the user send a message
     socket.on("chat:message", (data) => {
       // Setting the broadcast message to the room
-      socket.broadcast.emit("message", {
+      socket.broadcast.emit("chat:message", {
         nickname: socket.nickname,
         message: data,
       });
