@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Button } from 'primereact/button';
+import { InputText } from 'primereact/inputtext';
 
 let _SOCKET = null;
 
 export default function Chat() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
+  const [message, setMessage] = useState('');
   const [username, setUsername] = useState('');
   // Set the event to execute before exit and also verifying if there is a local storage username
   useEffect(() => {
@@ -16,7 +18,7 @@ export default function Chat() {
       navigate('/login');
     }
     setUsername(localStorage.getItem('mome:username'));
-  });
+  }, []);
   // Configuration of events on socket
   useEffect(() => {
     _SOCKET = io(
@@ -32,13 +34,13 @@ export default function Chat() {
     });
 
     /* Listening for a message event. */
-    _SOCKET.on('message', message => {
-      setMessages([...messages, 'asdasd']);
-      console.log(messages, message);
+    _SOCKET.on('chat:message', chatMessage => {
+      receiveMessage(chatMessage);
+      //setMessages([...messages, { nickname, message }]);
     });
 
     /* Listening for a action event. */
-    _SOCKET.on('chat:actions', action => console.log(action));
+    _SOCKET.on('chat:actions', chatAction => console.log(chatAction));
 
     /* Listening for a disconnect event. */
     _SOCKET.on('disconnect', () => console.log('server disconnected'));
@@ -46,12 +48,24 @@ export default function Chat() {
       _SOCKET.off();
     };
   }, []);
-
+  // Receive message
+  function receiveMessage(chatMessage) {
+    console.log(chatMessage);
+    console.log(messages);
+    setMessages(list => [...list, chatMessage]);
+  }
   // Send message
   function sendMessage(event) {
     event.preventDefault();
-    _SOCKET.emit('chat:message', 'Hola a todos');
-    setMessages([...messages, 'Hola maricas']);
+    _SOCKET.emit('chat:message', message);
+    setMessages(list => [
+      ...list,
+      {
+        nickname: 'Me',
+        message,
+      },
+    ]);
+    console.log(messages);
   }
   // Disconnect
   function disconnectChat(event) {
@@ -71,6 +85,11 @@ export default function Chat() {
     window.addEventListener('unload', disconnectChat, false);
     window.addEventListener('popstate', disconnectChat, false);
   }
+
+  function messageHandler(e) {
+    e.preventDefault();
+    setMessage(e.target.value);
+  }
   return (
     <main className="_h-screen">
       <nav className="w-100 d-flex justify-content-around align-items-center py-2 px-3">
@@ -78,7 +97,17 @@ export default function Chat() {
         <BtnLogOut />
       </nav>
       <p className="_text-small">Sesion iniciada como {username}</p>
-      <Button onClick={sendMessage}>Enviar mensaje defecto</Button>
+      <InputText placeholder="Write the message" onChange={messageHandler} />
+      <Button onClick={sendMessage}>Enviar</Button>
+
+      {messages.map((item, index) => {
+        return (
+          <div key={index}>
+            <p className="_font-bold m-0">{item.nickname}</p>
+            <p className="m-0">{item.message}</p>
+          </div>
+        );
+      })}
     </main>
   );
 }
