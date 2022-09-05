@@ -21,8 +21,10 @@ export default function Chat() {
   }, []);
   // Configuration of events on socket
   useEffect(() => {
+    console.log(process.env);
     _SOCKET = io(
-      'https://jalex-chat.herokuapp.com/chat?nickname=' +
+      process.env.REACT_APP_API_URL +
+        '/chat?username=' +
         localStorage.getItem('mome:username')
     );
     /* A listener that will be triggered when the socket is connected. */
@@ -61,7 +63,7 @@ export default function Chat() {
     setMessages(list => [
       ...list,
       {
-        nickname: 'Me',
+        username: 'Me',
         message,
       },
     ]);
@@ -103,7 +105,7 @@ export default function Chat() {
       {messages.map((item, index) => {
         return (
           <div key={index}>
-            <p className="_font-bold m-0">{item.nickname}</p>
+            <p className="_font-bold m-0">{item.username}</p>
             <p className="m-0">{item.message}</p>
           </div>
         );
