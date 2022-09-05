@@ -5,16 +5,10 @@
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import api from "./api.js";
 
 // Importing the socket.io configuration
 import SocketIO from "./socket.js";
-
-// Setting the URL and dirname of the application
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 // Creating the express application
 const app = express();
@@ -38,9 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Setting the static files path
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
+app.use("/chat", api);
 
 // Initializing the server
 server.listen(app.get("port"), () => {

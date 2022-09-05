@@ -1,3 +1,5 @@
+import { addUser, removeUser } from "./db/localDatabase.js";
+
 /*
  *  socket.js - Socket.io configuration
  */
@@ -7,19 +9,22 @@ const BOT_NAME = "bot";
 export default (io) => {
   // Setting the namespace "chat"
   io.of("/chat").on("connection", (socket) => {
-    // Verify if the user has nickname
-    if (!socket.handshake.query.nickname) {
+    // Verify if the user has username
+    if (!socket.handshake.query.username) {
       // Disconnect the user
       socket.disconnect(true);
       return;
     }
-    // Set the nickname
-    socket.nickname = socket.handshake.query.nickname;
-    console.log(`${socket.nickname} connected`);
+    // Set the username
+    socket.username = socket.handshake.query.username;
+    // Add to online users
+    addUser(socket.username, socket.id);
+    console.log(`${socket.username} connected`);
+
     // Send the message to the rest of the users
     socket.broadcast.emit("chat:actions", {
       by: BOT_NAME,
-      message: `${socket.nickname} joined the chat`,
+      message: `${socket.username} joined the chat`,
     });
 
     /*
@@ -30,7 +35,7 @@ export default (io) => {
     socket.on("chat:message", (data) => {
       // Setting the broadcast message to the room
       socket.broadcast.emit("chat:message", {
-        nickname: socket.nickname,
+        username: socket.username,
         message: data,
       });
     });
@@ -39,7 +44,7 @@ export default (io) => {
     socket.on("chat:typing", () => {
       // Send the message to all the users
       socket.broadcast.emit("chat:typing", {
-        message: `${socket.nickname} is typing...`,
+        message: `${socket.username} is typing...`,
       });
     });
     // When user is not typing
@@ -52,10 +57,12 @@ export default (io) => {
 
     // When the user disconnect
     socket.on("disconnect", () => {
+      // Remove from online users
+      removeUser(socket.id);
       // Send the message to the rest of the users
       socket.broadcast.emit("chat:actions", {
         by: BOT_NAME,
-        message: `${socket.nickname} left the chat`,
+        message: `${socket.username} left the chat`,
       });
     });
   });
