@@ -32,7 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Setting the static files path
-app.use("/chat", api);
+app.use("/chat/api", api);
 
 // Initializing the server
 server.listen(app.get("port"), () => {
