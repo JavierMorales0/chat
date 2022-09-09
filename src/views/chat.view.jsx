@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import EmojiPicker from '../components/emoji.picker';
+import PanelMembers from '../components/panel.members';
+import { Toaster } from 'react-hot-toast';
+import notify from '../components/notify';
 
 let _SOCKET = null;
 
@@ -10,18 +14,15 @@ export default function Chat() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [username, setUsername] = useState('');
   // Set the event to execute before exit and also verifying if there is a local storage username
   useEffect(() => {
     beforeExit();
     if (!localStorage.getItem('mome:username')) {
       navigate('/login');
     }
-    setUsername(localStorage.getItem('mome:username'));
   }, []);
   // Configuration of events on socket
   useEffect(() => {
-    console.log(process.env);
     _SOCKET = io(
       process.env.REACT_APP_API_URL +
         '/chat?username=' +
@@ -47,7 +48,11 @@ export default function Chat() {
     /* Listening for a disconnect event. */
     _SOCKET.on('disconnect', () => console.log('server disconnected'));
     return () => {
-      _SOCKET.off();
+      _SOCKET.off('connect');
+      _SOCKET.off('connect_error');
+      _SOCKET.off('chat:message');
+      _SOCKET.off('chat:actions');
+      _SOCKET.off('disconnect');
     };
   }, []);
   // Receive message
@@ -67,21 +72,14 @@ export default function Chat() {
         message,
       },
     ]);
+    setMessage('');
     console.log(messages);
   }
   // Disconnect
-  function disconnectChat(event) {
-    event.preventDefault();
+  function disconnectChat() {
     _SOCKET.disconnect();
     navigate('/');
   }
-  const BtnLogOut = () => {
-    return (
-      <Button className="py-1 px-3" onClick={disconnectChat}>
-        Cerrar sesi&oacute;n
-      </Button>
-    );
-  };
 
   function beforeExit() {
     window.addEventListener('unload', disconnectChat, false);
@@ -92,24 +90,44 @@ export default function Chat() {
     e.preventDefault();
     setMessage(e.target.value);
   }
-  return (
-    <main className="_h-screen">
-      <nav className="w-100 d-flex justify-content-around align-items-center py-2 px-3">
-        <span className="_text-small _font-bold">{username}</span>
-        <BtnLogOut />
-      </nav>
-      <p className="_text-small">Sesion iniciada como {username}</p>
-      <InputText placeholder="Write the message" onChange={messageHandler} />
-      <Button onClick={sendMessage}>Enviar</Button>
 
-      {messages.map((item, index) => {
-        return (
-          <div key={index}>
-            <p className="_font-bold m-0">{item.username}</p>
-            <p className="m-0">{item.message}</p>
+  function onLogOut() {
+    localStorage.removeItem('mome:username');
+    localStorage.removeItem('mome:imageUrl');
+    localStorage.removeItem('mome:email');
+    notify('loading', 'Exiting. See you later! 🤞 ');
+    setTimeout(() => {
+      disconnectChat();
+    }, 1500);
+  }
+  return (
+    <main>
+      <Toaster />
+      <div className="row m-0">
+        <aside className="col-12 col-md-3">
+          <PanelMembers onLogoutSuccess={onLogOut} />
+        </aside>
+        <div className="col-12 col-md-7 _chat-container py-4">
+          <div>
+            {messages.map((item, index) => {
+              return (
+                <div key={index}>
+                  <p className="_font-bold m-0">{item.username}</p>
+                  <p className="m-0">{item.message}</p>
+                </div>
+              );
+            })}
+            <InputText
+              placeholder="Write the message"
+              className="w-100"
+              onChange={messageHandler}
+              value={message}
+            />
+            <EmojiPicker message={message} setMessage={setMessage} />
+            <Button onClick={sendMessage}>Enviar</Button>
           </div>
-        );
-      })}
+        </div>
+      </div>
     </main>
   );
 }
