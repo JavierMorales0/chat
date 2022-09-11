@@ -1,5 +1,5 @@
 import { Button } from 'primereact/button';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import notify from '../components/notify';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ import { gapi } from 'gapi-script';
 
 export default function Login() {
   const navigate = useNavigate();
-  const avatarRef = useRef(null);
 
   useEffect(() => {
     if (localStorage.getItem('mome:username')) {
@@ -38,14 +37,14 @@ export default function Login() {
           I&apos;m going to help you!
         </p>
         <form className="d-flex flex-column justify-content-center align-items-center _w-50">
-          <section className="w-100 d-flex flex-wrap flex-row justify-content-around align-items-center px-4 py-2">
-            <div id="avatar" ref={avatarRef} className="mt-2"></div>
-            <div className="d-flex flex-wrap flex-column _w-50">
+          <section className="w-100 d-flex flex-wrap flex-row justify-content-center align-items-center px-4 py-2">
+            <div className="d-flex flex-wrap flex-column _w-35">
               <GoogleLogin
                 clientId={process.env.REACT_APP_GAPI_CLIENT_ID}
                 render={renderProps => (
                   <Button
                     label="Sign in with Google"
+                    icon="pi pi-google"
                     className="mt-3 w-100 py-1"
                     onClick={renderProps.onClick}
                     disabled={renderProps.disabled}

@@ -74,12 +74,6 @@ code {
   color: var(--text);
 }
 
-._chat-container {
-  background-color: var(--bg-gray);
-  backdrop-filter: blur(1px);
-  border-radius: 10px;
-}
-
 ._font-bold {
   font-weight: bold;
 }
@@ -186,7 +180,6 @@ code {
 ._w-50 {
   width: 100%;
 }
-
 ._justify {
   text-align: justify;
 }
@@ -213,7 +206,15 @@ code {
 }
 
 ._border {
-  border-bottom: 1px solid gray;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.226);
+}
+._chat-container {
+  width: 100%;
+  height: 70%;
+}
+._panel-container {
+  width: 100%;
+  height: 30%;
 }
 
 @media only screen and (min-width: 481px) {
@@ -225,5 +226,11 @@ code {
   }
   ._w-2550 {
     width: 25%;
+  }
+  ._chat-container {
+    height: 100%;
+  }
+  ._panel-container {
+    height: 100%;
   }
 }

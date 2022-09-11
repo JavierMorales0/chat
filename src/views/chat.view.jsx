@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import EmojiPicker from '../components/emoji.picker';
-import PanelMembers from '../components/panel.members';
+import PanelProfile from '../components/panel.profile';
 import { Toaster } from 'react-hot-toast';
 import notify from '../components/notify';
 
@@ -76,14 +76,14 @@ export default function Chat() {
     console.log(messages);
   }
   // Disconnect
-  function disconnectChat() {
+  function onDisconnect() {
     _SOCKET.disconnect();
     navigate('/');
   }
 
   function beforeExit() {
-    window.addEventListener('unload', disconnectChat, false);
-    window.addEventListener('popstate', disconnectChat, false);
+    window.addEventListener('unload', onDisconnect, false);
+    window.addEventListener('popstate', onDisconnect, false);
   }
 
   function messageHandler(e) {
@@ -97,18 +97,18 @@ export default function Chat() {
     localStorage.removeItem('mome:email');
     notify('loading', 'Exiting. See you later! 🤞 ');
     setTimeout(() => {
-      disconnectChat();
+      onDisconnect();
     }, 1500);
   }
   return (
-    <main>
+    <div>
       <Toaster />
-      <div className="row m-0">
-        <aside className="col-12 col-md-3">
-          <PanelMembers onLogoutSuccess={onLogOut} />
-        </aside>
-        <div className="col-12 col-md-7 _chat-container py-4">
-          <div>
+      <main className="h-screen row w-100">
+        <PanelProfile onLogoutSuccess={onLogOut} onDisconnect={onDisconnect} />
+        <div className=" col-12 col-md-9 py-4  _chat-container position-relative">
+          <div
+            className="w-100 px-1"
+            style={{ height: '85%', overflow: 'auto' }}>
             {messages.map((item, index) => {
               return (
                 <div key={index}>
@@ -117,17 +117,26 @@ export default function Chat() {
                 </div>
               );
             })}
+          </div>
+          <div
+            className="d-flex align-items-center justify-content-between gap-1 _font-boldposition-absolute bottom-0 start-0 end-0"
+            style={{ height: '15%' }}>
             <InputText
               placeholder="Write the message"
-              className="w-100"
+              className="w-75"
               onChange={messageHandler}
               value={message}
             />
             <EmojiPicker message={message} setMessage={setMessage} />
-            <Button onClick={sendMessage}>Enviar</Button>
+            <Button
+              className="text-center"
+              label="Enviar"
+              onClick={sendMessage}
+              style={{ minWidth: '150px' }}
+            />
           </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

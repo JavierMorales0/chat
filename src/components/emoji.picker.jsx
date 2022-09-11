@@ -13,7 +13,7 @@ export default function EmojiPickerComponent({ message, setMessage }) {
   return (
     <div>
       {!toogle ? (
-        <button onClick={toogleHandle}>Show emoji</button>
+        <button onClick={toogleHandle}>Moji</button>
       ) : (
         <div>
           <button onClick={toogleHandle}>Hide</button>
