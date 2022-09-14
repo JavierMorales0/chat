@@ -20,10 +20,14 @@ const historySchema = Schema({
   },
   status: {
     type: String,
-    enum: ["online", "disconnected"],
+    enum: ["online", "offline"],
     default: "online",
   },
   ipAddress: {
+    type: String,
+    default: "",
+  },
+  socketId: {
     type: String,
     default: "",
   },
