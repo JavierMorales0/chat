@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Button } from 'primereact/button';
@@ -14,6 +14,7 @@ export default function Chat() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const divScrollRef = useRef(null);
   // Set the event to execute before exit and also verifying if there is a local storage username
   useEffect(() => {
     beforeExit();
@@ -43,7 +44,9 @@ export default function Chat() {
     });
 
     /* Listening for a action event. */
-    _SOCKET.on('chat:actions', chatAction => console.log(chatAction));
+    _SOCKET.on('chat:actions', chatAction => {
+      setMessages(list => [...list, { ...chatAction, type: 'action' }]);
+    });
 
     /* Listening for a disconnect event. */
     _SOCKET.on('disconnect', () => console.log('server disconnected'));
@@ -55,25 +58,34 @@ export default function Chat() {
       _SOCKET.off('disconnect');
     };
   }, []);
+  useEffect(() => {
+    divScrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
   // Receive message
   function receiveMessage(chatMessage) {
-    console.log(chatMessage);
-    console.log(messages);
-    setMessages(list => [...list, chatMessage]);
+    setMessages(list => [
+      ...list,
+      { ...chatMessage, type: 'message', action: 'receive' },
+    ]);
   }
   // Send message
   function sendMessage(event) {
     event.preventDefault();
+    if (message == '') {
+      notify('warning', 'Please, write a message!');
+      return;
+    }
     _SOCKET.emit('chat:message', message);
     setMessages(list => [
       ...list,
       {
         username: 'Me',
         message,
+        type: 'message',
+        action: 'send',
       },
     ]);
     setMessage('');
-    console.log(messages);
   }
   // Disconnect
   function onDisconnect() {
@@ -100,32 +112,91 @@ export default function Chat() {
       onDisconnect();
     }, 1500);
   }
+
+  const sendedMessagesStyle = 'ms-auto text-end px-2 py-1 _bg-gray rounded-2 ';
+  const usernameStyle = '_font-bold';
+  const receivedMessagesStyle =
+    'text-start px-2 py-1 rounded-2 _bg-primary-05 ';
+  const usernameDisplay = item => {
+    return (
+      <p
+        className={
+          item.action === 'send'
+            ? sendedMessagesStyle + usernameStyle
+            : receivedMessagesStyle + usernameStyle
+        }
+        style={{ width: 'fit-content', marginBottom: '5px' }}>
+        {item.username}
+      </p>
+    );
+  };
+  const messageDisplay = item => {
+    return (
+      <p
+        className={
+          item.action === 'send' ? sendedMessagesStyle : receivedMessagesStyle
+        }
+        style={{ width: 'fit-content', marginBottom: '5px' }}>
+        {item.message}
+      </p>
+    );
+  };
+
   return (
     <div>
       <Toaster />
       <main className="h-screen row w-100">
         <PanelProfile onLogoutSuccess={onLogOut} onDisconnect={onDisconnect} />
-        <div className=" col-12 col-md-9 py-4  _chat-container position-relative">
+        <div className=" col-12 col-md-9 py-4  _chat-container d-flex flex-column align-items-center justify-content-start">
           <div
             className="w-100 px-1"
             style={{ height: '85%', overflow: 'auto' }}>
             {messages.map((item, index) => {
+              if (item.type == 'message') {
+                return (
+                  <div key={index} className="d-block ms-auto w-100 rounded-2">
+                    {
+                      // IF INDEX IS 0 OR LESS, IT NEEDS TO PRINT THE USERNAME
+                      index <= 0 && usernameDisplay(item)
+                    }
+                    {
+                      // IF INDEX IS MORE THAN 0 HAVE TO COMPARE QITH THE
+                      // LAST USERNAME TO PRINT IT AGAIN OR NOT
+                      index > 0 &&
+                        messages[index - 1].username != item.username &&
+                        usernameDisplay(item)
+                    }
+                    {
+                      // DISPLAY THE MESSAGE
+                      messageDisplay(item)
+                    }
+                  </div>
+                );
+              }
               return (
-                <div key={index}>
-                  <p className="_font-bold m-0">{item.username}</p>
-                  <p className="m-0">{item.message}</p>
+                <div
+                  key={index}
+                  className="_text-xxsmall w-100 text-center my-1">
+                  <span className="_font-bold">🤖 {item.message}</span>
                 </div>
               );
             })}
+            <div ref={divScrollRef}></div>
           </div>
           <div
-            className="d-flex align-items-center justify-content-between gap-1 _font-boldposition-absolute bottom-0 start-0 end-0"
+            className="w-100 d-flex align-items-center justify-content-between gap-1 _font-bold"
             style={{ height: '15%' }}>
             <InputText
               placeholder="Write the message"
               className="w-75"
               onChange={messageHandler}
               value={message}
+              onKeyPress={event => {
+                if (event.key === 'Enter') {
+                  sendMessage(event);
+                }
+              }}
+              autoFocus={true}
             />
             <EmojiPicker message={message} setMessage={setMessage} />
             <Button

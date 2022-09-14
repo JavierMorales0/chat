@@ -17,7 +17,6 @@ export default function PanelProfile({ onLogoutSuccess, onDisconnect }) {
         imageUrl: localStorage.getItem('mome:imageUrl'),
       },
     });
-    console.log(user);
   }, []);
 
   return (
@@ -29,7 +28,12 @@ export default function PanelProfile({ onLogoutSuccess, onDisconnect }) {
         <span>Chat</span>
       </div>
       <div className="d-flex flex-column justify-content-center align-items-center py-4 px-1">
-        <img src={user.data.imageUrl} alt="ProfileImage" className="_avatar" />
+        <img
+          src={user.data.imageUrl}
+          alt="ProfileImage"
+          className="_avatar"
+          referrerPolicy="no-referrer"
+        />
         <p className="_font-bold my-2 mb-0">{user.data.username}</p>
         <p className="_text-xxsmall my-0">{user.data.email}</p>
         <GoogleLogout

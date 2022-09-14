@@ -3,9 +3,10 @@
 
 :root {
   --primary: #6366f1;
+  --primary-bg: #6365f144;
   --text: #ffffff;
   --text-secondary: #dddddd;
-  --bg-gray: #edf0f5;
+  --bg-gray: #f8f9fc;
   --accent: #e78f8e;
 }
 * {
@@ -72,6 +73,19 @@ code {
 ._bg-primary {
   background-color: var(--primary);
   color: var(--text);
+}
+
+._bg-gray {
+  background-color: var(--bg-gray);
+}
+
+._bg-lightgray {
+  background-color: var(--text-secondary);
+}
+
+._bg-primary-05 {
+  background-color: var(--primary-bg);
+  color: black;
 }
 
 ._font-bold {
