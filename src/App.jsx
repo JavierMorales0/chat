@@ -47,14 +47,14 @@ function App() {
           alt="Illustration of a person holding a text message"
         />
         <div className="d-flex flex-column justify-content-center align-items-start _w-50">
-          <p className=" _text-medium _font-bold _uppercase">
+          <p className=" _text-medium _font-bold">
             Don&apos;t worry how it costs... I&apos;m free
           </p>
           <p className="_text-small _justify _text-secondary mb-1">
             This is a non paid project wishing to create a platform to show my
-            capatibilities to design and code a really helpful chat. I really
-            hope that your stay is pleasant and that you enjoy all my work and
-            dedication. With love...
+            capatibilities to design and code a really helpful chat. I hope that
+            your stay is pleasant and that you enjoy all my work and dedication.
+            With love...
           </p>
           <a
             href="https://www.linkedin.com/in/javier-morales-melara"
