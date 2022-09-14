@@ -4,8 +4,10 @@
 
 import express from "express";
 import { createServer } from "http";
+import mongoose from "mongoose";
 import { Server } from "socket.io";
 import api from "./api.js";
+import { connectDb } from "./db/index.js";
 
 // Importing the socket.io configuration
 import SocketIO from "./socket.js";
@@ -14,6 +16,15 @@ import SocketIO from "./socket.js";
 const app = express();
 // Creating the http server using the express application
 const server = createServer(app);
+
+// Connect to database on mongo atlas
+
+try {
+  connectDb();
+} catch (err) {
+  console.error(err);
+}
+
 // Creating the socket.io server using the http server
 const io = new Server(server, {
   cors: {
