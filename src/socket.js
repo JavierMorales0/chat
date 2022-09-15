@@ -9,54 +9,56 @@ const BOT_NAME = "bot";
 
 export default (io) => {
   // Setting the namespace "chat"
-  io.of("/chat").on("connection", async (socket) => {
-    // Verify if the user has username
-    if (!socket.handshake.query.username) {
-      // Disconnect the user
-      socket.disconnect(true);
-      return;
-    }
-    // Set the username
-    socket.username = socket.handshake.query.username;
-    // Verify if the user exists
-    const user = await UserModel.findOne({ username: socket.username });
-    if (!user) {
-      // Lets save a new user
-      const _user = UserModel({
-        username: socket.username,
-        email: "test@gmail.com",
-        avatar: "",
-      });
-      await _user.save();
-      socket.user = _user;
-      console.log(_user._id);
-    } else {
-      socket.user = user;
-    }
-    // Add to History
-    const _history = HistoryModel({
-      user: socket.user._id,
-      socketId: socket.id,
-    });
-    await _history.save();
-    // Add to online users
-    console.log(`${socket.username} connected`);
-
-    // Send the message to the rest of the users
-    socket.broadcast.emit("chat:actions", {
-      by: BOT_NAME,
-      message: `${socket.username} joined the chat`,
-    });
-
+  io.of("/chat").on("connection", (socket) => {
     /*
      *  Configurating the events
      */
+
+    socket.on("chat:login", async (data) => {
+      // Set the username
+      const { username, email, avatar } = data;
+      const { remoteAddress, remotePort } = socket.request.connection;
+      // Verify if the user exists
+      let user = await UserModel.findOne({ email });
+      if (!user) {
+        // Lets save a new user
+        user = UserModel({
+          username,
+          email,
+          avatar: avatar ?? "",
+        });
+        await user.save();
+      }
+      socket.user = user;
+
+      // IF USERNAME OR AVATAR HAS CHANGED APPLY THIS CHANGES ON DB
+      if (username != user.username || avatar != user.avatar) {
+        user.username = username;
+        user.avatar = avatar;
+        await user.save();
+        console.log("User data has changed!");
+      }
+      // Add to History
+      const _history = HistoryModel({
+        user: socket.user._id,
+        socketId: socket.id,
+        ipAddress: remoteAddress + ":" + remotePort,
+      });
+      await _history.save();
+      // Add to online users
+      console.log(`${socket.user.username} connected`);
+      // Send the message to the rest of the users
+      socket.broadcast.emit("chat:actions", {
+        by: BOT_NAME,
+        message: `${socket.user.username} joined the chat`,
+      });
+    });
 
     // When the user send a message
     socket.on("chat:message", (data) => {
       // Setting the broadcast message to the room
       socket.broadcast.emit("chat:message", {
-        username: socket.username,
+        username: socket.user.username,
         message: data,
       });
     });
@@ -65,7 +67,7 @@ export default (io) => {
     socket.on("chat:typing", () => {
       // Send the message to all the users
       socket.broadcast.emit("chat:typing", {
-        message: `${socket.username} is typing...`,
+        message: `${socket.user.username} is typing...`,
       });
     });
     // When user is not typing
@@ -79,14 +81,28 @@ export default (io) => {
     // When the user disconnect
     socket.on("disconnect", async () => {
       // Disconnect on history
-      _history.disconnectionDate = Date.now();
-      _history.status = "offline";
-      await _history.save();
+      // IF IT HAS NOT A LOGIN YET
+      if (!socket.user) {
+        console.log("Some unlogged user has disconnected");
+        return;
+      }
+      // GET THE SPECIFIC RECORD
+      const history = await HistoryModel.findOne({
+        socketId: socket.id,
+        status: "online",
+      });
+      // SET THE DISCONNECTION DATE
+      history.disconnectionDate = Date.now();
+      // SET THE STATUS OFFLINE
+      history.status = "offline";
+      // SAVE RECORD
+      await history.save();
       // Send the message to the rest of the users
       socket.broadcast.emit("chat:actions", {
         by: BOT_NAME,
-        message: `${socket.username} left the chat`,
+        message: `${socket.user.username} left the chat`,
       });
+      console.log(`${socket.user.username} disconnected`);
     });
   });
 };
