@@ -24,13 +24,20 @@ export default function Chat() {
   }, []);
   // Configuration of events on socket
   useEffect(() => {
-    _SOCKET = io(
-      process.env.REACT_APP_API_URL +
-        '/chat?username=' +
-        localStorage.getItem('mome:username')
-    );
+    _SOCKET = io(process.env.REACT_APP_API_URL + '/chat');
     /* A listener that will be triggered when the socket is connected. */
-    _SOCKET.on('connect', () => console.log('connected'));
+    _SOCKET.on('connect', () => {
+      // Get the credentials data from localstorage
+      const username = localStorage.getItem('mome:username');
+      const email = localStorage.getItem('mome:email');
+      const avatar = localStorage.getItem('mome:imageUrl');
+
+      _SOCKET.emit('chat:login', {
+        username,
+        email,
+        avatar,
+      });
+    });
 
     /* A listener that will be triggered when the socket is disconnected. */
     _SOCKET.on('connect_error', () => {
