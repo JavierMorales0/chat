@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import { Server } from "socket.io";
 import api from "./api.js";
 import { connectDb } from "./db/index.js";
+import cors from "cors";
 
 // Importing the socket.io configuration
 import SocketIO from "./socket.js";
@@ -16,7 +17,10 @@ import SocketIO from "./socket.js";
 const app = express();
 // Creating the http server using the express application
 const server = createServer(app);
-
+server.prependListener("request", (req, res) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+});
+app.use(cors());
 // Connect to database on mongo atlas
 
 try {
