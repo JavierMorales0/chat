@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { GoogleLogout } from 'react-google-login';
 import BackButton from './back.button';
+import LastUsers from './last.users.jsx';
 
 export default function PanelProfile({ onLogoutSuccess, onDisconnect }) {
   const [user, setUser] = useState({
@@ -49,7 +50,8 @@ export default function PanelProfile({ onLogoutSuccess, onDisconnect }) {
           buttonText={'Logout'}
           onLogoutSuccess={onLogoutSuccess}
         />
-      </div>
+      </div>{' '}
+      <LastUsers />
     </div>
   );
 }

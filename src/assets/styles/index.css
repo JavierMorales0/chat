@@ -206,6 +206,10 @@ code {
   color: var(--text-secondary);
 }
 
+._text-accent {
+  color: var(--accent);
+}
+
 ._br-1 {
   border-radius: 10px;
 }
@@ -216,6 +220,11 @@ code {
   border-radius: 50%;
 }
 
+._avatar-min {
+  max-width: 32px;
+  max-height: 32px;
+  border-radius: 50%;
+}
 ._test {
   border: 1px solid black;
 }
@@ -230,6 +239,10 @@ code {
 ._panel-container {
   width: 100%;
   height: 30%;
+}
+
+._only-desktop {
+  display: none;
 }
 
 @media only screen and (min-width: 481px) {
@@ -247,5 +260,8 @@ code {
   }
   ._panel-container {
     height: 100%;
+  }
+  ._only-desktop {
+    display: block;
   }
 }
