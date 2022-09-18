@@ -3,6 +3,7 @@ import { Button } from 'primereact/button';
 import { GoogleLogout } from 'react-google-login';
 import BackButton from './back.button';
 import LastUsers from './last.users.jsx';
+import PanelComponent from './profile.component.jsx';
 
 export default function PanelProfile({ onLogoutSuccess, onDisconnect }) {
   const [user, setUser] = useState({
@@ -29,14 +30,8 @@ export default function PanelProfile({ onLogoutSuccess, onDisconnect }) {
         <span>Chat</span>
       </div>
       <div className="d-flex flex-column justify-content-center align-items-center py-4 px-1">
-        <img
-          src={user.data.imageUrl}
-          alt="ProfileImage"
-          className="_avatar"
-          referrerPolicy="no-referrer"
-        />
-        <p className="_font-bold my-2 mb-0">{user.data.username}</p>
-        <p className="_text-xxsmall my-0">{user.data.email}</p>
+        <PanelComponent />
+
         <GoogleLogout
           clientId={process.env.REACT_APP_GAPI_CLIENT_ID}
           render={renderProps => (

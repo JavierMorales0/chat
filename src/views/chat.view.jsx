@@ -7,6 +7,8 @@ import EmojiPicker from '../components/emoji.picker';
 import PanelProfile from '../components/panel.profile';
 import { Toaster } from 'react-hot-toast';
 import notify from '../components/notify';
+import { motion, AnimateSharedLayout, AnimatePresence } from 'framer-motion';
+import moment from 'moment';
 
 let _SOCKET = null;
 
@@ -14,6 +16,10 @@ export default function Chat() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
+  const [isOpen, setIsOpen] = useState({
+    id: -1,
+    status: false,
+  });
   const divScrollRef = useRef(null);
   // Set the event to execute before exit and also verifying if there is a local storage username
   useEffect(() => {
@@ -22,6 +28,7 @@ export default function Chat() {
       navigate('/login');
     }
   }, []);
+
   // Configuration of events on socket
   useEffect(() => {
     _SOCKET = io(process.env.REACT_APP_API_URL + '/chat');
@@ -82,7 +89,7 @@ export default function Chat() {
       notify('warning', 'Please, write a message!');
       return;
     }
-    _SOCKET.emit('chat:message', message);
+    _SOCKET.emit('chat:message', { message, date: moment().toISOString() });
     setMessages(list => [
       ...list,
       {
@@ -90,6 +97,7 @@ export default function Chat() {
         message,
         type: 'message',
         action: 'send',
+        date: moment().toISOString(),
       },
     ]);
     setMessage('');
@@ -120,34 +128,80 @@ export default function Chat() {
     }, 1500);
   }
 
-  const sendedMessagesStyle = 'ms-auto text-end px-2 py-1 _bg-gray rounded-2 ';
+  const sendedMessagesStyle = ' _bg-gray ';
+  const sendedStyle = 'ms-auto text-end px-2 py-1 rounded-2 ';
+  const receivedStyle = 'text-start px-2 py-1 rounded-2 ';
   const usernameStyle = '_font-bold';
-  const receivedMessagesStyle =
-    'text-start px-2 py-1 rounded-2 _bg-primary-05 ';
+  const receivedMessagesStyle = '_bg-primary-05 ';
   const usernameDisplay = item => {
     return (
-      <p
+      <motion.p
+        layout
         className={
           item.action === 'send'
-            ? sendedMessagesStyle + usernameStyle
-            : receivedMessagesStyle + usernameStyle
+            ? sendedStyle + usernameStyle
+            : receivedStyle + usernameStyle
         }
-        style={{ width: 'fit-content', marginBottom: '5px' }}>
+        style={{ width: 'fit-content', marginBottom: '0px' }}>
+        {item.action === 'receive' && (
+          <img
+            src={item.avatar}
+            alt="Profile picture"
+            referrerPolicy="no-referrer"
+            className="_avatar-min me-2"
+          />
+        )}
+
         {item.username}
-      </p>
+      </motion.p>
     );
   };
-  const messageDisplay = item => {
+  const messageDisplay = (item, index) => {
+    const toggleOpen = () =>
+      setIsOpen({
+        id: index,
+        status: isOpen.id == index ? !isOpen.status : true,
+      });
     return (
-      <p
-        className={
-          item.action === 'send' ? sendedMessagesStyle : receivedMessagesStyle
-        }
-        style={{ width: 'fit-content', marginBottom: '5px' }}>
-        {item.message}
-      </p>
+      <AnimateSharedLayout>
+        <motion.div
+          layout
+          className={
+            item.action === 'send'
+              ? sendedStyle + sendedMessagesStyle
+              : receivedStyle + receivedMessagesStyle
+          }
+          style={{
+            width: 'fit-content',
+            marginBottom: '5px',
+            minWidth: '150px',
+          }}
+          onClick={toggleOpen}
+          initial={{ borderRadius: 10 }}>
+          <motion.p layout className="m-0">
+            {item.message}
+          </motion.p>
+          <AnimatePresence>
+            {isOpen?.id == index && isOpen?.status && (
+              <ContentMessage date={item.date} />
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </AnimateSharedLayout>
     );
   };
+
+  function ContentMessage({ date }) {
+    return (
+      <motion.div
+        layout
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}>
+        <p className="m-0 _text-xxsmall">{moment(date).fromNow()}</p>
+      </motion.div>
+    );
+  }
 
   return (
     <div>
@@ -157,11 +211,14 @@ export default function Chat() {
         <div className=" col-12 col-md-9 py-4  _chat-container d-flex flex-column align-items-center justify-content-start">
           <div
             className="w-100 px-1"
-            style={{ height: '85%', overflow: 'auto' }}>
+            style={{ height: '85%', overflowY: 'auto', cursor: 'pointer' }}>
             {messages.map((item, index) => {
               if (item.type == 'message') {
                 return (
-                  <div key={index} className="d-block ms-auto w-100 rounded-2">
+                  <motion.div
+                    layout
+                    key={index}
+                    className="d-block ms-auto w-100 rounded-2">
                     {
                       // IF INDEX IS 0 OR LESS, IT NEEDS TO PRINT THE USERNAME
                       index <= 0 && usernameDisplay(item)
@@ -175,17 +232,18 @@ export default function Chat() {
                     }
                     {
                       // DISPLAY THE MESSAGE
-                      messageDisplay(item)
+                      messageDisplay(item, index)
                     }
-                  </div>
+                  </motion.div>
                 );
               }
               return (
-                <div
+                <motion.div
+                  layout
                   key={index}
                   className="_text-xxsmall w-100 text-center my-1">
                   <span className="_font-bold">🤖 {item.message}</span>
-                </div>
+                </motion.div>
               );
             })}
             <div ref={divScrollRef}></div>

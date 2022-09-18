@@ -1,11 +1,17 @@
-// import logo from './logo.svg';
-//import Login from './components/login.component';
-import IndexImage from './assets/illustrations/undraw_quick_chat_re_bit5.svg';
 import IndexImage2 from './assets/illustrations/undraw_personal_opinions_re_qw29.svg';
 import { Button } from 'primereact/button';
+import { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Typewriter from 'typewriter-effect';
+import IndexIndicator from './components/index.indicator.component';
 function App() {
+  const [positionChatBtn, setPositionChatBtn] = useState(null);
+  const refChatButton = useRef(null);
+  useEffect(() => {
+    setPositionChatBtn(refChatButton.current.getBoundingClientRect());
+  }, []);
+
   return (
     <div>
       <div
@@ -28,25 +34,31 @@ function App() {
               }}
             />
           </div>
+
           <Link to="/chat" className="_link">
-            <Button label="Chat now!" icon="pi pi-comment" />
+            <Button
+              label="Chat now!"
+              icon="pi pi-comment"
+              ref={refChatButton}
+            />
           </Link>
         </article>
-        <img
-          className="_w-25"
-          src={IndexImage}
-          alt="Illustration of a bird chatting"
-        />
+        {positionChatBtn && (
+          <IndexIndicator positionChatBtn={positionChatBtn} />
+        )}
       </div>
       <div
         className="w-100 h-screen d-flex flex-column flex-md-row 
         justify-content-around align-items-center _bg-primary px-2 px-md-0">
-        <img
+        <motion.img
+          whileTap={{ scale: 1.2 }}
+          whileHover={{ scale: 0.8 }}
+          transition={{ duration: 0.5 }}
           src={IndexImage2}
-          className="_w-25"
+          className="_w-25 px-5 px-md-0"
           alt="Illustration of a person holding a text message"
         />
-        <div className="d-flex flex-column justify-content-center align-items-start _w-50">
+        <div className="d-flex flex-column justify-content-center align-items-start _w-50 px-5 px-lg-0">
           <p className=" _text-medium _font-bold">
             Don&apos;t worry how it costs... I&apos;m free
           </p>
