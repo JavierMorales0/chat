@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import io from 'socket.io-client';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import EmojiPicker from '../components/emoji.picker';
+//import EmojiPicker from '../components/emoji.picker';
 import PanelProfile from '../components/panel.profile';
 import { Toaster } from 'react-hot-toast';
 import notify from '../components/notify';
@@ -263,7 +263,7 @@ export default function Chat() {
               }}
               autoFocus={true}
             />
-            <EmojiPicker message={message} setMessage={setMessage} />
+            {/*<EmojiPicker message={message} setMessage={setMessage} />*/}
             <Button
               className="text-center"
               label="Enviar"
