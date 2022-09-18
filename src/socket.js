@@ -1,6 +1,8 @@
 import { UserModel } from "./db/models/UserModel.js";
 import { HistoryModel } from "./db/models/HistoryModel.js";
 
+// IMPORT MOMENTJS
+import moment from "moment";
 /*
  *  socket.js - Socket.io configuration
  */
@@ -57,9 +59,17 @@ export default (io) => {
     // When the user send a message
     socket.on("chat:message", (data) => {
       // Setting the broadcast message to the room
+      console.log({
+        username: socket.user.username,
+        avatar: socket.user.avatar,
+        message: data,
+        date: moment().format("YYYY-MM-DD HH:mm:ss"),
+      });
       socket.broadcast.emit("chat:message", {
         username: socket.user.username,
+        avatar: socket.user.avatar,
         message: data,
+        date: moment().format("YYYY-MM-DD HH:mm:ss"),
       });
     });
 
