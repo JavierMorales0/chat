@@ -57,13 +57,13 @@ export default (io) => {
     });
 
     // When the user send a message
-    socket.on("chat:message", (data) => {
+    socket.on("chat:message", ({ message, date }) => {
       // Setting the broadcast message to the room
       socket.broadcast.emit("chat:message", {
         username: socket.user.username,
         avatar: socket.user.avatar,
-        message: data,
-        date: moment().toISOString(),
+        message,
+        date,
       });
     });
 
